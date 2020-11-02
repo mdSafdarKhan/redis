@@ -1,5 +1,6 @@
 Spring Boot Redis Cache: 
-	While Redis is an Open source in-memory data structure store, used as a database, cache and message broker, this lesson will demonstrate only the caching integration.
+	While Redis is an Open source in-memory data structure store, used as a database, 
+	cache and message broker, this lesson will demonstrate only the caching integration.
 
 Spring Boot Redis Cache Maven Dependencies:
 	<dependency>
@@ -62,7 +63,8 @@ Defining the Model:
 	}
 
 Configuring Redis Cache:
-	With Spring Boot and the required dependency already in work with Maven, we can configure local Redis instance with only three lines in our application.properties file as:
+	With Spring Boot and the required dependency already in work with Maven, we can 
+	configure local Redis instance with only three lines in our application.properties file as:
 
 		# Redis Config
 		spring.cache.type=redis
@@ -120,7 +122,9 @@ Defining the Repository:
 	}
 
 Defining the Controller:
-	Controllers are the place where Redis cache is called for action. Actually, this is the best place to do so because as a cache is directly associated with it, the request won’t even have to enter the service code to wait for cached results.
+	Controllers are the place where Redis cache is called for action. Actually, this is 
+	the best place to do so because as a cache is directly associated with it, the 
+	request won’t even have to enter the service code to wait for cached results.
 
 	Here is the controller skeleton:
 
@@ -157,9 +161,13 @@ Defining the Controller:
 		  return userRepository.findOne(Long.valueOf(userId));
 		}
 
-	In the above mapping, getUser method will put a person into a cache named as ‘users’, identifies that person by the key as ‘userId’ and will only store a user with followers greater than 12000. This makes sure that cache is populated with users who are very popular and are often queried for.
+	In the above mapping, getUser method will put a person into a cache named as 
+	‘users’, identifies that person by the key as ‘userId’ and will only store a 
+	user with followers greater than 12000. This makes sure that cache is populated 
+	with users who are very popular and are often queried for.
 
-	Also, we have intentionally added a log statement in the API call. Let’s make some API calls form Postman at this moment. These are the calls we made:
+	Also, we have intentionally added a log statement in the API call. Let’s make 
+	some API calls form Postman at this moment. These are the calls we made:
 
 		localhost:8090/1
 		localhost:8090/1
@@ -172,10 +180,14 @@ Defining the Controller:
 		... : Getting user with ID 1.
 		... : Getting user with ID 2.
 
-	Notice something? We made four API calls but only three log statements were present. This is because the User with ID 2 is having 29000 followers and so, it’s data was cached. This means that when an API call was made for it, the data was returned from the cache and no DB call was made for this!
+	Notice something? We made four API calls but only three log statements were present. 
+	This is because the User with ID 2 is having 29000 followers and so, it’s data was 
+	cached. This means that when an API call was made for it, the data was returned 
+	from the cache and no DB call was made for this!
 
 Updating Cache:
-	Cache values should also update whenever their actual objects value are updated. This can be done using @CachePut annotation:
+	Cache values should also update whenever their actual objects value are updated. 
+	This can be done using @CachePut annotation:
 
 		@CachePut(value = "users", key = "#user.id")
 		@PutMapping("/update")
@@ -187,7 +199,8 @@ Updating Cache:
 	With this, a person is again identified by his ID and is updated with the results.
 
 Clearing Cache:
-	If some data is to be deleted from actual Database, there won’t be a point to keep it in cache anymore. We can clear cache data using @CacheEvict annotation:
+	If some data is to be deleted from actual Database, there won’t be a point to 
+	keep it in cache anymore. We can clear cache data using @CacheEvict annotation:
 
 		@CacheEvict(value = "users", allEntries=true)
 		@DeleteMapping("/{id}")
@@ -199,7 +212,11 @@ Clearing Cache:
 	In the last mapping, we just evicted cache entries and did nothing else.
 
 Redis Cache Limits:
-	Although Redis is very fast, it still has no limits on storing any amount of data on a 64-bit system. It can only store 3GB of data on a 32-bit system. More available memory can result into a more hit ratio but this will tend to cease once too much memory is occupied by Redis. When cache size reaches the memory limit, old data is removed to make place for new one.
+	Although Redis is very fast, it still has no limits on storing any amount of 
+	data on a 64-bit system. It can only store 3GB of data on a 32-bit system. More 
+	available memory can result into a more hit ratio but this will tend to cease 
+	once too much memory is occupied by Redis. When cache size reaches the memory 
+	limit, old data is removed to make place for new one.
 
 
 
